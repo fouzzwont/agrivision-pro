@@ -157,11 +157,11 @@ Locally you can trigger the same path from **Settings → Send test digest**.
 
 Copy `.env.example` to `.env`:
 
-| Variable | Required | Effect |
-| --- | --- | --- |
-| `RESEND_API_KEY` | no | Enables real email delivery. Without it, digests are logged instead of sent. |
-| `NOTIFICATION_FROM` | no | Verified sender address for outgoing email. |
-| `DIGEST_RECIPIENTS` | no | Comma-separated override for the digest recipient list. |
+| Variable            | Required | Effect                                                                       |
+| ------------------- | -------- | ---------------------------------------------------------------------------- |
+| `RESEND_API_KEY`    | no       | Enables real email delivery. Without it, digests are logged instead of sent. |
+| `NOTIFICATION_FROM` | no       | Verified sender address for outgoing email.                                  |
+| `DIGEST_RECIPIENTS` | no       | Comma-separated override for the digest recipient list.                      |
 
 Everything is optional. The app degrades gracefully and stays usable.
 
