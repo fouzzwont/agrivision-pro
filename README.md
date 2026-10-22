@@ -195,6 +195,29 @@ Both are downloaded as `agrivision-disease-<date>.pdf` / `.csv`.
 
 ---
 
+## Auto-commit watcher
+
+`scripts/autocommit.mjs` polls `git status` and, once the working tree has
+been quiet for a few seconds, stages everything, commits with a generated
+message and pushes to the current branch.
+
+```bash
+bun run autocommit              # watch until Ctrl+C
+bun run autocommit -- --once    # one cycle, then exit
+bun run autocommit -- --no-push # commit only
+```
+
+It refuses to run while a merge, rebase, revert or index lock is present,
+skips unresolved conflicts, and rejects files above 25 MB. Ignored paths
+(`node_modules`, `dist`, `.env`, `.wrangler`, `.tanstack`) are never
+committed because the script relies on `git status`. Activity is logged to
+`.git/autocommit.log`.
+
+Because it commits whatever is on disk, run it only when you are happy for
+in-progress edits to land on `main`.
+
+---
+
 ## Deployment
 
 `wrangler.jsonc` is ready for Cloudflare Workers:
