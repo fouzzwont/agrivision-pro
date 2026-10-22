@@ -1,0 +1,30 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "agrivision",
+  "compatibility_date": "2025-09-24",
+  "compatibility_flags": ["nodejs_compat"],
+  "main": "src/server.ts",
+
+  // Cron triggers. The alert digest runs twice a day (06:00 and 18:00 UTC) so
+  // the overnight risk window and the pre-harvest window are both covered.
+  "triggers": {
+    "crons": ["0 6,18 * * *"],
+  },
+
+  // Optional write-through persistence. Create the database with
+  //   npx wrangler d1 create agrivision
+  // then paste the returned id below. Without the binding the app still runs
+  // fully, it just resets its mutable state on a cold start.
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "agrivision",
+      "database_id": "00000000-0000-0000-0000-000000000000",
+      "migrations_dir": "migrations",
+    },
+  ],
+
+  "vars": {
+    "NOTIFICATION_FROM": "AgriVision <alerts@agrivision.ma>",
+  },
+}
