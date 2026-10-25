@@ -262,8 +262,9 @@ docker run -p 3000:3000 --env CRON_SECRET=dev-secret agrivision
    `github.com/fouzzwont/agrivision-pro`).
 2. In Render: **New → Blueprint**, select the repository, apply
    `render.yaml`.
-3. Render creates the `agrivision` web service and the `agrivision-digest`
-   cron job. The first build takes a few minutes.
+3. Render creates the `agrivision` web service. The first build takes a few
+   minutes. Free services sleep after ~15 minutes without traffic, so the
+   first request afterwards takes about 50 seconds to wake it.
 4. Optionally open the web service → **Environment** and add:
    - `RESEND_API_KEY` — enables real email delivery.
    - `RESEND_FROM` — verified sender address (falls back to
@@ -288,13 +289,19 @@ Render injects `PORT`; the server reads it and binds `0.0.0.0`.
 
 Workers cron triggers do not exist on Render, so `src/routes/api/cron/digest.ts`
 exposes the same `runAlertDigest()` behind `CRON_SECRET` (header
-`x-cron-secret` or `?secret=`). `render.yaml` schedules a cron job that runs
-`scripts/cron-digest.mjs`, which calls that endpoint with `APP_URL` and
-`CRON_SECRET`.
+`x-cron-secret` or `?secret=`). `scripts/cron-digest.mjs` calls that endpoint
+using `APP_URL` and `CRON_SECRET`.
 
-If you create the cron job manually, set `APP_URL` to the public URL of the
-web service and reuse the web service's `CRON_SECRET`. You can also trigger a
-digest by hand:
+Render Cron Jobs have no free plan, so the cron service in `render.yaml` is
+commented out by default. Uncomment it (plan `starter`) or create a Cron Job
+in the dashboard with:
+
+- Command: `node scripts/cron-digest.mjs`
+- Schedule: `0 6,18 * * *`
+- `APP_URL` = public URL of the web service
+- `CRON_SECRET` = the same value as the web service
+
+You can also trigger a digest by hand:
 
 ```bash
 curl -X POST https://<your-service>.onrender.com/api/cron/digest \
