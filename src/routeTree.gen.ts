@@ -18,6 +18,7 @@ import { Route as DetectionRouteImport } from './routes/detection'
 import { Route as AlertsRouteImport } from './routes/alerts'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as BlocksBlockIdRouteImport } from './routes/blocks.$blockId'
+import { Route as ApiCronDigestRouteImport } from './routes/api/cron/digest'
 
 const SettingsRoute = SettingsRouteImport.update({
   id: '/settings',
@@ -64,6 +65,11 @@ const BlocksBlockIdRoute = BlocksBlockIdRouteImport.update({
   path: '/blocks/$blockId',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiCronDigestRoute = ApiCronDigestRouteImport.update({
+  id: '/api/cron/digest',
+  path: '/api/cron/digest',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -75,6 +81,7 @@ export interface FileRoutesByFullPath {
   '/risk-map': typeof RiskMapRoute
   '/settings': typeof SettingsRoute
   '/blocks/$blockId': typeof BlocksBlockIdRoute
+  '/api/cron/digest': typeof ApiCronDigestRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -86,6 +93,7 @@ export interface FileRoutesByTo {
   '/risk-map': typeof RiskMapRoute
   '/settings': typeof SettingsRoute
   '/blocks/$blockId': typeof BlocksBlockIdRoute
+  '/api/cron/digest': typeof ApiCronDigestRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -98,6 +106,7 @@ export interface FileRoutesById {
   '/risk-map': typeof RiskMapRoute
   '/settings': typeof SettingsRoute
   '/blocks/$blockId': typeof BlocksBlockIdRoute
+  '/api/cron/digest': typeof ApiCronDigestRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -111,6 +120,7 @@ export interface FileRouteTypes {
     | '/risk-map'
     | '/settings'
     | '/blocks/$blockId'
+    | '/api/cron/digest'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -122,6 +132,7 @@ export interface FileRouteTypes {
     | '/risk-map'
     | '/settings'
     | '/blocks/$blockId'
+    | '/api/cron/digest'
   id:
     | '__root__'
     | '/'
@@ -133,6 +144,7 @@ export interface FileRouteTypes {
     | '/risk-map'
     | '/settings'
     | '/blocks/$blockId'
+    | '/api/cron/digest'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -145,6 +157,7 @@ export interface RootRouteChildren {
   RiskMapRoute: typeof RiskMapRoute
   SettingsRoute: typeof SettingsRoute
   BlocksBlockIdRoute: typeof BlocksBlockIdRoute
+  ApiCronDigestRoute: typeof ApiCronDigestRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -212,6 +225,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BlocksBlockIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/cron/digest': {
+      id: '/api/cron/digest'
+      path: '/api/cron/digest'
+      fullPath: '/api/cron/digest'
+      preLoaderRoute: typeof ApiCronDigestRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -225,6 +245,7 @@ const rootRouteChildren: RootRouteChildren = {
   RiskMapRoute: RiskMapRoute,
   SettingsRoute: SettingsRoute,
   BlocksBlockIdRoute: BlocksBlockIdRoute,
+  ApiCronDigestRoute: ApiCronDigestRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

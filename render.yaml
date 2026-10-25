@@ -1,0 +1,45 @@
+# Render Blueprint — https://render.com/docs/blueprint-spec
+#
+# Creates a Docker web service built from the repository Dockerfile, plus an
+# optional cron job that triggers the alert digest twice a day.
+#
+# After the first deploy, set RESEND_API_KEY (and RESEND_FROM) in the Render
+# dashboard to enable real email delivery. Without them digests are recorded
+# as "logged" — nothing is faked.
+
+services:
+  - type: web
+    name: agrivision
+    runtime: docker
+    plan: free
+    region: frankfurt
+    dockerfilePath: ./Dockerfile
+    healthCheckPath: /
+    autoDeploy: true
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: CRON_SECRET
+        generateValue: true
+      - key: RESEND_API_KEY
+        sync: false
+      - key: RESEND_FROM
+        sync: false
+
+  - type: cron
+    name: agrivision-digest
+    runtime: docker
+    plan: starter
+    region: frankfurt
+    schedule: "0 6,18 * * *"
+    dockerfilePath: ./Dockerfile
+    dockerCommand: node scripts/cron-digest.mjs
+    envVars:
+      # Update this if the web service gets a different URL.
+      - key: APP_URL
+        value: https://agrivision.onrender.com
+      - key: CRON_SECRET
+        fromService:
+          type: web
+          name: agrivision
+          envVarKey: CRON_SECRET

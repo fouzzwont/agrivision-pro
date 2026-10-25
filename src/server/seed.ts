@@ -237,7 +237,7 @@ export const DISEASE_LOSS_COEFFICIENTS: Record<string, number> = {
 
 function buildInspections(): Inspection[] {
   const rows: Inspection[] = [];
-  const perDay = { "0": 3, "1": 2, "2": 4, "3": 2, "4": 3, "5": 1, "6": 2 };
+  const perDay: Record<string, number> = { "0": 3, "1": 2, "2": 4, "3": 2, "4": 3, "5": 1, "6": 2 };
 
   for (let daysAgo = 44; daysAgo >= 0; daysAgo--) {
     const count = perDay[String(daysAgo % 7)] ?? 2;

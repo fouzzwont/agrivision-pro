@@ -67,18 +67,20 @@ export const Route = createFileRoute("/risk-map")({
 });
 
 function RiskMap() {
-  const { blocks, allBlocks, infectionRisk, insights, alerts, weather } = Route.useLoaderData();
-  const search = Route.useSearch();
-  const navigate = useNavigate();
+  const data = Route.useLoaderData() as any;
+  const { blocks, allBlocks, infectionRisk, insights, alerts, weather } = data;
+  const search = Route.useSearch() as any;
+  const navigate = useNavigate() as any;
 
   const setFilter = (key: keyof RiskSearch, value: string | number) => {
     navigate({
-      search: (prev) => ({ ...prev, [key]: value }) as RiskSearch,
+      to: ".",
+      search: (prev: any) => ({ ...(prev ?? {}), [key]: value }),
       replace: true,
     });
   };
 
-  const totalArea = blocks.reduce((sum, b) => sum + b.area, 0);
+  const totalArea = (blocks as any[]).reduce((sum: number, b: any) => sum + b.area, 0);
   const topPressure = infectionRisk[0];
 
   return (
@@ -234,13 +236,13 @@ function RiskMap() {
                   Suggested intervention priority
                 </div>
                 <ol className="mt-1 list-decimal space-y-1.5 pl-4 text-sm">
-                  {insights.priorities.map((priority) => (
+                  {(insights as any).priorities?.map((priority: any) => (
                     <li key={priority.name}>
                       <span className="font-medium">{priority.name}</span> —{" "}
                       <span className="text-muted-foreground">{priority.action}</span>
                     </li>
                   ))}
-                  {insights.priorities.length === 0 && (
+                  {(insights as any).priorities?.length === 0 && (
                     <li className="text-muted-foreground">No action required.</li>
                   )}
                 </ol>
@@ -260,7 +262,7 @@ function RiskMap() {
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-3">
-              {infectionRisk.slice(0, 4).map((risk) => (
+              {(infectionRisk as any[]).slice(0, 4).map((risk: any) => (
                 <div key={risk.disease}>
                   <div className="flex items-center justify-between gap-2 text-xs">
                     <span className="truncate font-medium">{risk.disease}</span>
@@ -271,11 +273,11 @@ function RiskMap() {
                       className="h-full rounded-full"
                       style={{
                         width: `${risk.score}%`,
-                        background: RISK_COLOR[risk.level],
+                        background: (RISK_COLOR as any)[risk.level],
                       }}
                     />
                   </div>
-                  <p className="mt-1 text-[11px] text-muted-foreground">{risk.drivers[0]}</p>
+                  <p className="mt-1 text-[11px] text-muted-foreground">{risk.drivers?.[0]}</p>
                 </div>
               ))}
               {infectionRisk.length === 0 && (
@@ -293,7 +295,7 @@ function RiskMap() {
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-2 text-xs">
-              {blocks.map((block) => (
+              {(blocks as any[]).map((block: any) => (
                 <div
                   key={block.id}
                   className="flex items-center justify-between border-b py-1.5 last:border-0"
@@ -303,7 +305,7 @@ function RiskMap() {
                     <span className="text-muted-foreground">{block.detections} det.</span>
                     <span
                       className="h-2 w-2 rounded-full"
-                      style={{ background: RISK_COLOR[block.risk] }}
+                      style={{ background: RISK_COLOR[block.risk as RiskLevel] }}
                     />
                   </span>
                 </div>
@@ -321,10 +323,10 @@ function RiskMap() {
                 <CardTitle className="text-sm">Open alerts in view</CardTitle>
               </CardHeader>
               <CardContent className="space-y-2 text-xs">
-                {alerts
-                  .filter((alert) => alert.status === "open")
+                {(alerts as any[])
+                  .filter((alert: any) => alert.status === "open")
                   .slice(0, 5)
-                  .map((alert) => (
+                  .map((alert: any) => (
                     <div key={alert.id} className="flex items-start justify-between gap-2">
                       <span className="truncate">{alert.title}</span>
                       <SeverityBadge level={alert.severity} />

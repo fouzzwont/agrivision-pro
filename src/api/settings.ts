@@ -65,7 +65,7 @@ export const saveSettings = createServerFn({ method: "POST" })
   })
   .handler(async ({ data }): Promise<Settings> => {
     const { getStore } = await import("@/server/store");
-    return getStore().saveSettings(data);
+    return getStore().saveSettings(data as unknown as Partial<Settings>);
   });
 
 export type SettingsPatch = {

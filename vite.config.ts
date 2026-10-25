@@ -41,8 +41,11 @@ export default defineConfig(({ command, mode }) => {
     plugins: [
       tailwindcss(),
       tsConfigPaths({ projects: ["./tsconfig.json"] }),
-      // Cloudflare Workers target is only used for production builds.
-      ...(command === "build" ? [cloudflare({ viteEnvironment: { name: "ssr" } })] : []),
+      // Cloudflare Workers target is only used for production builds. Set
+      // DEPLOY_TARGET=node to build a plain Node server instead (Render, Docker).
+      ...(command === "build" && process.env.DEPLOY_TARGET !== "node"
+        ? [cloudflare({ viteEnvironment: { name: "ssr" } })]
+        : []),
       // Redirect TanStack Start's bundled server entry to src/server.ts (our SSR error wrapper).
       // @cloudflare/vite-plugin builds from this — wrangler.jsonc main alone is insufficient.
       tanstackStart({
@@ -53,7 +56,9 @@ export default defineConfig(({ command, mode }) => {
             specifiers: ["server-only"],
           },
         },
-        server: { entry: "server" },
+        server: {
+          entry: process.env.DEPLOY_TARGET === "node" ? "server.node" : "server",
+        },
       }),
       viteReact(),
     ],

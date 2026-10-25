@@ -66,6 +66,7 @@ export const Route = createFileRoute("/blocks/$blockId")({
 });
 
 function BlockDetail() {
+  const data = Route.useLoaderData() as any;
   const {
     block,
     detections,
@@ -77,7 +78,7 @@ function BlockDetail() {
     weather,
     trend,
     actionLog,
-  } = Route.useLoaderData();
+  } = data;
   const router = useRouter();
   const [note, setNote] = useState("");
   const [busy, setBusy] = useState<string | null>(null);
@@ -116,7 +117,7 @@ function BlockDetail() {
     }
   };
 
-  const openAlerts = alerts.filter((alert) => alert.status === "open");
+  const openAlerts = (alerts as any[]).filter((alert: any) => alert.status === "open");
 
   return (
     <div className="space-y-6 p-4 md:p-6">
@@ -127,7 +128,7 @@ function BlockDetail() {
           <>
             <SeverityBadge level={block.risk} />
             <Button variant="outline" size="sm" asChild>
-              <Link to="/risk-map">
+              <Link to="/risk-map" search={{ crop: "all", disease: "all", range: 30 }}>
                 <ArrowLeft className="mr-1.5 h-4 w-4" />
                 Back to map
               </Link>
@@ -295,7 +296,7 @@ function BlockDetail() {
             </div>
 
             <div className="space-y-3">
-              {infectionRisk.map((risk) => (
+              {(infectionRisk as any[]).map((risk: any) => (
                 <div key={risk.disease}>
                   <div className="flex items-center justify-between gap-2 text-xs">
                     <span className="truncate font-medium">{risk.disease}</span>
@@ -304,11 +305,11 @@ function BlockDetail() {
                   <div className="mt-1 h-1.5 w-full overflow-hidden rounded-full bg-muted">
                     <div
                       className="h-full rounded-full"
-                      style={{ width: `${risk.score}%`, background: RISK_COLOR[risk.level] }}
+                      style={{ width: `${risk.score}%`, background: (RISK_COLOR as any)[(risk as any).level] }}
                     />
                   </div>
                   <ul className="mt-1 space-y-0.5 text-[11px] text-muted-foreground">
-                    {risk.drivers.map((driver) => (
+                    {((risk as any).drivers || []).map((driver: any) => (
                       <li key={driver}>· {driver}</li>
                     ))}
                   </ul>
@@ -331,7 +332,7 @@ function BlockDetail() {
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-3">
-            {yieldRisk.contributions.map((contribution) => (
+            {((yieldRisk as any).contributions || []).map((contribution: any) => (
               <div key={contribution.disease}>
                 <div className="flex items-center justify-between gap-2 text-xs">
                   <span className="font-medium">{contribution.disease}</span>
@@ -354,7 +355,7 @@ function BlockDetail() {
                 </p>
               </div>
             ))}
-            {yieldRisk.contributions.length === 0 && (
+            {((yieldRisk as any).contributions || []).length === 0 && (
               <p className="text-sm text-muted-foreground">
                 No disease pressure recorded for this block.
               </p>
@@ -370,7 +371,7 @@ function BlockDetail() {
             <CardDescription>{openAlerts.length} open on this block</CardDescription>
           </CardHeader>
           <CardContent className="space-y-3">
-            {alerts.map((alert) => (
+            {(alerts as any[]).map((alert: any) => (
               <div key={alert.id} className="rounded-lg border p-3">
                 <div className="flex items-start justify-between gap-2">
                   <div className="min-w-0">
@@ -434,7 +435,7 @@ function BlockDetail() {
                   </tr>
                 </thead>
                 <tbody>
-                  {detections.slice(0, 12).map((detection) => (
+                  {(detections as any[]).slice(0, 12).map((detection: any) => (
                     <tr key={detection.id} className="border-b last:border-0">
                       <td className="py-2 pr-4 text-muted-foreground">
                         {detection.recordedAt.slice(0, 10)}
@@ -493,7 +494,7 @@ function BlockDetail() {
               >
                 Save note
               </Button>
-              {notes.map((fieldNote) => (
+              {(notes as any[]).map((fieldNote: any) => (
                 <div key={fieldNote.id} className="border-b pb-3 last:border-0 last:pb-0">
                   <div className="text-xs text-muted-foreground">
                     {fieldNote.date} · {fieldNote.author}
@@ -513,7 +514,7 @@ function BlockDetail() {
           <CardDescription>Operator actions recorded on this block</CardDescription>
         </CardHeader>
         <CardContent className="space-y-2">
-          {actionLog.map((entry) => (
+          {(actionLog as any[]).map((entry: any) => (
             <div
               key={entry.id}
               className="flex flex-wrap items-center justify-between gap-2 border-b pb-2 text-sm last:border-0"

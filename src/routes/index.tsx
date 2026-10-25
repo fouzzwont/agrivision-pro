@@ -116,7 +116,7 @@ function Dashboard() {
               Live
             </Badge>
             <Button variant="outline" size="sm" asChild>
-              <Link to="/risk-map">
+              <Link to="/risk-map" search={{ crop: "all", disease: "all", range: 30 }}>
                 <MapIcon className="mr-1.5 h-4 w-4" />
                 Risk Map
               </Link>

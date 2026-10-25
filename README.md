@@ -220,6 +220,16 @@ in-progress edits to land on `main`.
 
 ## Deployment
 
+There are two build targets. They share the same routes, server functions and
+UI — only the HTTP entry point differs.
+
+| Target     | Command              | Entry point                  | Host               |
+| ---------- | -------------------- | ---------------------------- | ------------------ |
+| Cloudflare | `bun run build`      | `dist/server/index.js`       | Cloudflare Workers |
+| Node       | `bun run build:node` | `dist/server/server.node.js` | Render, Docker     |
+
+### Cloudflare Workers
+
 `wrangler.jsonc` is ready for Cloudflare Workers:
 
 ```bash
@@ -229,3 +239,72 @@ npx wrangler deploy
 
 The build produces both the client assets and the worker entry point. The
 `scheduled` handler is included in the worker bundle.
+
+### Render
+
+Render runs the Node target. `vite.config.ts` skips `@cloudflare/vite-plugin`
+when `DEPLOY_TARGET=node`, and `src/server.node.ts` wraps the same request
+handler with [`srvx`](https://srvx.h3.dev) so it becomes a long-running HTTP
+listener. That entry also serves `dist/client` itself (with MIME types,
+immutable caching for `/assets/*` and a path-traversal guard), because Render
+has no equivalent of the Workers assets binding.
+
+`Dockerfile` builds the app and runs it on `node:22-slim`:
+
+```bash
+docker build -t agrivision .
+docker run -p 3000:3000 --env CRON_SECRET=dev-secret agrivision
+```
+
+#### Blueprint (recommended)
+
+1. Push this repository to GitHub (already at
+   `github.com/fouzzwont/agrivision-pro`).
+2. In Render: **New → Blueprint**, select the repository, apply
+   `render.yaml`.
+3. Render creates the `agrivision` web service and the `agrivision-digest`
+   cron job. The first build takes a few minutes.
+4. Optionally open the web service → **Environment** and add:
+   - `RESEND_API_KEY` — enables real email delivery.
+   - `RESEND_FROM` — verified sender address (falls back to
+     `NOTIFICATION_FROM`).
+
+#### Manual Docker service
+
+**New → Web Service → Docker**, repository `fouzzwont/agrivision-pro`,
+Dockerfile path `./Dockerfile`, health check path `/`. No build command is
+needed — the image already contains `dist/` and production `node_modules`.
+Render injects `PORT`; the server reads it and binds `0.0.0.0`.
+
+#### Environment variables
+
+| Variable         | Required | Effect                                                                 |
+| ---------------- | -------- | ---------------------------------------------------------------------- |
+| `CRON_SECRET`    | no       | Enables `GET/POST /api/cron/digest`. Unset → that route returns `503`. |
+| `RESEND_API_KEY` | no       | Real email delivery. Without it digests are recorded as `logged`.      |
+| `RESEND_FROM`    | no       | Sender address for digest email.                                       |
+
+#### Scheduled digests on Render
+
+Workers cron triggers do not exist on Render, so `src/routes/api/cron/digest.ts`
+exposes the same `runAlertDigest()` behind `CRON_SECRET` (header
+`x-cron-secret` or `?secret=`). `render.yaml` schedules a cron job that runs
+`scripts/cron-digest.mjs`, which calls that endpoint with `APP_URL` and
+`CRON_SECRET`.
+
+If you create the cron job manually, set `APP_URL` to the public URL of the
+web service and reuse the web service's `CRON_SECRET`. You can also trigger a
+digest by hand:
+
+```bash
+curl -X POST https://<your-service>.onrender.com/api/cron/digest \
+  -H "x-cron-secret: $CRON_SECRET"
+```
+
+#### Caveat: persistence
+
+Render has no D1 binding and the free plan has no persistent disk, so
+`src/server/store.ts` stays in memory. Inspections, alert acknowledgements and
+settings survive while the instance is awake and **reset on restart or
+redeploy**. Nothing is faked — the app simply starts from the deterministic
+seed again. Attach a database before using it for real record keeping.
