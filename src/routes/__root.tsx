@@ -118,7 +118,7 @@ function RootShell({ children }: { children: React.ReactNode }) {
       <head>
         <HeadContent />
       </head>
-      <body>
+      <body className="font-sans antialiased">
         {children}
         <Scripts />
       </body>
@@ -137,7 +137,7 @@ function RootComponent() {
             <AppSidebar />
             <SidebarInset>
               <Topbar />
-              <main className="min-h-[calc(100svh-3.5rem)] bg-background">
+              <main className="min-h-[calc(100svh-3.5rem)] glass relative z-0">
                 <Outlet />
               </main>
             </SidebarInset>
