@@ -110,10 +110,12 @@ export function buildBlockGeoJson(
   };
 }
 
-/** Basemap tiles. CARTO's raster basemaps are free and need no API key. */
+/** Basemap tiles. OpenStreetMap's standard tiles need no API key and work
+ * everywhere. If you prefer CARTO and have an API key, override with the
+ * VITE_MAP_LIGHT_TILES / VITE_MAP_DARK_TILES environment variables. */
 export const BASEMAPS = {
-  light: "https://basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png",
-  dark: "https://basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png",
+  light: import.meta.env.VITE_MAP_LIGHT_TILES ?? "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+  dark: import.meta.env.VITE_MAP_DARK_TILES ?? "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
 };
 
 export const BASEMAP_ATTRIBUTION =

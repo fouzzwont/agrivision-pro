@@ -11,8 +11,8 @@ import "maplibre-gl/dist/maplibre-gl.css";
  * Estate map.
  *
  * Renders the monitored blocks as real GeoJSON polygons over an OpenStreetMap
- * raster basemap served by CARTO (no API key required). MapLibre is imported
- * dynamically because it needs WebGL, which the server renderer does not have.
+ * raster basemap (no API key required). MapLibre is imported dynamically
+ * because it needs WebGL, which the server renderer does not have.
  *
  * The colour of every block comes from the live design tokens, so the map
  * follows the application theme.
