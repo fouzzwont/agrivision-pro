@@ -1,12 +1,11 @@
 import type { Crop } from "@/lib/types";
 
 /**
- * Reference library of the diseases the scanner can recognise.
+ * Agronomy reference library.
  *
- * These entries describe the *model's* behaviour for a canonical sample — the
- * probabilities, the visual indicators and the agronomic recommendation. Live
- * scans produced by the detection service are stored separately and shown
- * alongside these reference cases.
+ * Static, human-written content: what a disease looks like, what to do about
+ * it, and whether it warrants escalation. It contains no model output — live
+ * scan results come from the ONNX classifier and are shown separately.
  */
 export type DiseaseSample = {
   name: string;
@@ -14,8 +13,9 @@ export type DiseaseSample = {
   description: string;
   recommendation: string;
   escalate: boolean;
-  probabilities: { label: string; value: number }[];
   indicators: string[];
+  /** Label the shipped model uses for this disease, when it was trained on it. */
+  modelLabel?: string;
 };
 
 export const DISEASE_LIBRARY: Record<string, DiseaseSample> = {
@@ -27,12 +27,6 @@ export const DISEASE_LIBRARY: Record<string, DiseaseSample> = {
     recommendation:
       "Isolate affected trees, remove and destroy symptomatic material, control psyllid vectors, and notify agronomist immediately.",
     escalate: true,
-    probabilities: [
-      { label: "Citrus Greening (HLB)", value: 94 },
-      { label: "Bacterial Canker", value: 3 },
-      { label: "Nutrient deficiency", value: 2 },
-      { label: "Healthy Citrus", value: 1 },
-    ],
     indicators: ["Asymmetric leaf mottling", "Yellow shoot pattern", "Vein corking"],
   },
   canker: {
@@ -43,12 +37,8 @@ export const DISEASE_LIBRARY: Record<string, DiseaseSample> = {
     recommendation:
       "Sanitize pruning tools, schedule copper-based treatment, restrict block access during wet periods.",
     escalate: true,
-    probabilities: [
-      { label: "Bacterial Canker", value: 88 },
-      { label: "Greasy Spot", value: 7 },
-      { label: "Healthy Citrus", value: 5 },
-    ],
     indicators: ["Raised corky lesions", "Yellow halos", "Leaf abscission"],
+    modelLabel: "Bacterial Canker",
   },
   greasy: {
     name: "Citrus Greasy Spot",
@@ -57,11 +47,6 @@ export const DISEASE_LIBRARY: Record<string, DiseaseSample> = {
       "Fungal disease causing greasy yellow-brown blisters on leaf undersides, leading to defoliation.",
     recommendation: "Apply copper or oil spray pre-summer. Manage leaf litter to reduce inoculum.",
     escalate: false,
-    probabilities: [
-      { label: "Greasy Spot", value: 82 },
-      { label: "Leaf Miner stress", value: 11 },
-      { label: "Healthy Citrus", value: 7 },
-    ],
     indicators: ["Yellow-brown blisters", "Greasy underside", "Premature defoliation"],
   },
   healthy_citrus: {
@@ -71,11 +56,6 @@ export const DISEASE_LIBRARY: Record<string, DiseaseSample> = {
       "No disease indicators detected. Foliage shows uniform color and structure consistent with healthy growth.",
     recommendation: "Continue routine monitoring. No intervention required.",
     escalate: false,
-    probabilities: [
-      { label: "Healthy Citrus", value: 96 },
-      { label: "Leaf Miner stress", value: 3 },
-      { label: "Greasy Spot", value: 1 },
-    ],
     indicators: ["Uniform leaf color", "No visible lesions", "Normal vein structure"],
   },
   peacock: {
@@ -85,11 +65,6 @@ export const DISEASE_LIBRARY: Record<string, DiseaseSample> = {
       "Fungal disease (Spilocaea oleagina) creating dark circular spots resembling peacock-eye markings, causing defoliation.",
     recommendation: "Apply copper-based fungicide. Improve canopy aeration through pruning.",
     escalate: true,
-    probabilities: [
-      { label: "Olive Peacock Spot", value: 91 },
-      { label: "Olive Leaf Spot", value: 6 },
-      { label: "Healthy Olive", value: 3 },
-    ],
     indicators: ["Dark circular spots", "Yellow halos", "Premature leaf drop"],
   },
   healthy_olive: {
@@ -99,11 +74,6 @@ export const DISEASE_LIBRARY: Record<string, DiseaseSample> = {
       "Foliage shows healthy chlorophyll distribution with no fungal or bacterial indicators.",
     recommendation: "Maintain routine scouting and irrigation schedule.",
     escalate: false,
-    probabilities: [
-      { label: "Healthy Olive", value: 97 },
-      { label: "Olive Leaf Spot", value: 2 },
-      { label: "Nutrient deficiency", value: 1 },
-    ],
     indicators: ["Uniform green color", "No spotting", "Healthy bud structure"],
   },
 };
@@ -118,32 +88,3 @@ export const DISEASE_SAMPLES = [
   { key: "healthy_olive", label: "Healthy Olive", crop: "Olive" as Crop },
 ];
 
-/**
- * Derives the health verdict from a probability breakdown.
- *
- * The healthy class always wins ties: a scan is only called diseased when the
- * top disease class is both the most likely *and* above 50% confidence.
- */
-export function classifySample(sample: DiseaseSample): {
-  verdict: "Healthy" | "Diseased";
-  severity: "Low" | "Medium" | "High" | "Critical";
-  confidence: number;
-} {
-  const top = sample.probabilities[0];
-  const confidence = top?.value ?? 0;
-  const isHealthy = /healthy/i.test(top?.label ?? "");
-  const diseased = !isHealthy && confidence > 50;
-
-  let severity: "Low" | "Medium" | "High" | "Critical" = "Low";
-  if (diseased) {
-    if (confidence >= 90) severity = "Critical";
-    else if (confidence >= 75) severity = "High";
-    else severity = "Medium";
-  }
-
-  return {
-    verdict: diseased ? "Diseased" : "Healthy",
-    severity,
-    confidence,
-  };
-}

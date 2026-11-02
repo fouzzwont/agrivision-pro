@@ -20,6 +20,11 @@ dist-ssr
 .wrangler/
 .dev.vars
 
+# Training data and intermediate checkpoints (regenerate with training/prepare.py)
+training/data/
+training/artifacts/
+*.parquet
+
 # Environment (keep the template)
 .env
 .env.local

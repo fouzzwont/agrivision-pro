@@ -17,31 +17,46 @@ export const getDetections = createServerFn({ method: "GET" }).handler(
  * complete.
  */
 export const runDetection = createServerFn({ method: "POST" })
-  .inputValidator((data: { fileName: string; crop: Crop; blockId: string; sizeBytes: number }) => {
-    if (!data || typeof data.fileName !== "string" || data.fileName.length === 0) {
-      throw new Error("fileName is required");
-    }
-    if (data.crop !== "Olive" && data.crop !== "Citrus") {
-      throw new Error("crop must be Olive or Citrus");
-    }
-    if (typeof data.blockId !== "string" || data.blockId.length === 0) {
-      throw new Error("blockId is required");
-    }
-    return data;
-  })
+  .inputValidator(
+    (data: {
+      fileName: string;
+      crop: Crop;
+      blockId: string;
+      sizeBytes: number;
+      prediction: { label: string; confidence: number };
+    }) => {
+      if (!data || typeof data.fileName !== "string" || data.fileName.length === 0) {
+        throw new Error("fileName is required");
+      }
+      if (data.crop !== "Olive" && data.crop !== "Citrus") {
+        throw new Error("crop must be Olive or Citrus");
+      }
+      if (typeof data.blockId !== "string" || data.blockId.length === 0) {
+        throw new Error("blockId is required");
+      }
+      if (
+        !data.prediction ||
+        typeof data.prediction.label !== "string" ||
+        typeof data.prediction.confidence !== "number"
+      ) {
+        throw new Error("prediction is required");
+      }
+      return data;
+    },
+  )
   .handler(async ({ data }): Promise<Detection> => {
     const { getStore } = await import("@/server/store");
-    const { simulateInference } = await import("@/server/detection");
+    const { buildDetection } = await import("@/server/detection");
     const store = getStore();
     const block = await store.getBlock(data.blockId);
     if (!block) throw new Error(`Unknown block: ${data.blockId}`);
 
-    const detection = simulateInference({
+    const detection = buildDetection({
       fileName: data.fileName,
       crop: data.crop,
       blockId: data.blockId,
       blockName: block.name,
-      sizeBytes: data.sizeBytes,
+      prediction: data.prediction,
     });
 
     return store.addScan(detection);
