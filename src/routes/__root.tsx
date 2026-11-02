@@ -137,7 +137,7 @@ function RootComponent() {
             <AppSidebar />
             <SidebarInset>
               <Topbar />
-              <main className="min-h-[calc(100svh-3.5rem)] glass relative z-0">
+              <main className="min-h-[calc(100svh-3.5rem)] bg-background">
                 <Outlet />
               </main>
             </SidebarInset>

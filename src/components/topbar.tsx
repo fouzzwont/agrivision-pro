@@ -128,7 +128,7 @@ export function Topbar() {
   const badgeCount = summary?.open ?? 0;
 
   return (
-    <header className="sticky top-0 z-30 flex h-14 items-center gap-3 border-b glass px-4">
+    <header className="sticky top-0 z-30 flex h-14 items-center gap-3 border-b bg-background/90 px-4 backdrop-blur-sm">
       <SidebarTrigger />
       <div className="hidden items-center gap-2 md:flex">
         <DropdownMenu>

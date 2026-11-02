@@ -23,7 +23,6 @@ import {
   SidebarFooter,
 } from "@/components/ui/sidebar";
 import { Badge } from "@/components/ui/badge";
-import { cn } from "@/lib/utils";
 
 const items = [
   { title: "Dashboard", url: "/", icon: LayoutDashboard },
@@ -40,10 +39,10 @@ export function AppSidebar() {
   const path = useRouterState({ select: (s) => s.location.pathname });
 
   return (
-    <Sidebar collapsible="icon" className="glass-strong border-r">
-      <SidebarHeader className="border-b glass">
+    <Sidebar collapsible="icon">
+      <SidebarHeader className="border-b">
         <Link to="/" className="flex items-center gap-2 px-2 py-3">
-          <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary text-primary-foreground glossy">
+          <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary text-primary-foreground">
             <Leaf className="h-5 w-5" />
           </div>
           <div className="flex flex-col leading-tight group-data-[collapsible=icon]:hidden">
@@ -52,24 +51,16 @@ export function AppSidebar() {
           </div>
         </Link>
       </SidebarHeader>
-      <SidebarContent className="glass">
+      <SidebarContent>
         <SidebarGroup>
-          <SidebarGroupLabel className="glass">Workspace</SidebarGroupLabel>
+          <SidebarGroupLabel>Workspace</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               {items.map((item) => {
                 const active = item.url === "/" ? path === "/" : path.startsWith(item.url);
                 return (
                   <SidebarMenuItem key={item.title}>
-                    <SidebarMenuButton
-                      asChild
-                      isActive={active}
-                      tooltip={item.title}
-                      className={cn(
-                        active ? "bg-primary/15 text-primary" : "hover:bg-secondary/50",
-                        "glass-transparent",
-                      )}
-                    >
+                    <SidebarMenuButton asChild isActive={active} tooltip={item.title}>
                       <Link to={item.url}>
                         <item.icon />
                         <span>{item.title}</span>
@@ -87,8 +78,8 @@ export function AppSidebar() {
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
-      <SidebarFooter className="border-t glass">
-        <div className="rounded-lg bg-muted/40 p-3 text-xs text-muted-foreground">
+      <SidebarFooter className="border-t group-data-[collapsible=icon]:hidden">
+        <div className="rounded-lg bg-muted/60 p-3 text-xs text-muted-foreground">
           <div className="font-medium text-foreground">Pilot mode</div>
           Connected to FOMACOP Estate · Marrakech-Safi
         </div>

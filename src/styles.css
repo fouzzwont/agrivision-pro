@@ -59,102 +59,92 @@
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
-  --color-agri-glass: var(--agri-glass);
-  --color-agri-glass-border: var(--agri-glass-border);
-  --color-agri-surface: var(--agri-surface);
-  --font-sans: var(--font-outfit), var(--font-inter);
-  --font-outfit: "Outfit", ui-sans-serif, system-ui, sans-serif;
-  --font-inter: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-inter);
+  --font-inter: "Inter", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-outfit: "Outfit", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 }
 
-/* Google Fonts: Outfit for headings (elegant, geometric), Inter for body */
-@import url("https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap");
+/* Fonts: Inter for UI (highly legible), Outfit for headings */
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@500;600;700&display=swap");
 
 :root {
-  --radius: 0.75rem;
-  /* AgriVision palette: deep olive, citrus, warm sand, earth tones */
-  --background: oklch(0.985 0.005 95);
-  --foreground: oklch(0.2 0.015 240);
-  --card: oklch(1 0 0 / 0.72);
-  --card-foreground: oklch(0.22 0.02 240);
-  --popover: oklch(1 0 0 / 0.8);
-  --popover-foreground: oklch(0.22 0.02 240);
-  --primary: oklch(0.42 0.11 130); /* deep olive green */
-  --primary-foreground: oklch(0.98 0.01 110);
-  --secondary: oklch(0.95 0.012 95);
-  --secondary-foreground: oklch(0.28 0.03 240);
-  --muted: oklch(0.94 0.01 95);
-  --muted-foreground: oklch(0.5 0.02 240);
-  --accent: oklch(0.72 0.16 65); /* warm citrus gold */
-  --accent-foreground: oklch(0.22 0.04 50);
-  --destructive: oklch(0.55 0.22 27);
-  --destructive-foreground: oklch(0.98 0.003 247);
-  --border: oklch(0.9 0.01 95);
-  --input: oklch(0.92 0.01 95);
-  --ring: oklch(0.42 0.11 130);
-  --chart-1: oklch(0.5 0.11 130); /* olive */
-  --chart-2: oklch(0.72 0.16 65); /* citrus */
-  --chart-3: oklch(0.55 0.04 240); /* slate */
-  --chart-4: oklch(0.78 0.13 95); /* sand */
-  --chart-5: oklch(0.6 0.18 27); /* alert */
-  --sidebar: oklch(0.985 0.005 95);
-  --sidebar-foreground: oklch(0.25 0.02 240);
-  --sidebar-primary: oklch(0.42 0.11 130);
-  --sidebar-primary-foreground: oklch(0.98 0.01 110);
-  --sidebar-accent: oklch(0.95 0.015 95);
-  --sidebar-accent-foreground: oklch(0.28 0.03 240);
-  --sidebar-border: oklch(0.9 0.01 95);
-  --sidebar-ring: oklch(0.42 0.11 130);
+  --radius: 0.625rem;
+  /* AgriVision palette: deep olive, citrus, sand, slate */
+  --background: oklch(0.988 0.004 95);
+  --foreground: oklch(0.21 0.015 240);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.21 0.015 240);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.21 0.015 240);
+  --primary: oklch(0.44 0.1 130); /* deep olive green */
+  --primary-foreground: oklch(0.985 0.008 110);
+  --secondary: oklch(0.965 0.01 95);
+  --secondary-foreground: oklch(0.28 0.02 240);
+  --muted: oklch(0.96 0.008 95);
+  --muted-foreground: oklch(0.5 0.015 240);
+  --accent: oklch(0.72 0.15 65); /* warm citrus */
+  --accent-foreground: oklch(0.2 0.04 50);
+  --destructive: oklch(0.57 0.22 27);
+  --destructive-foreground: oklch(0.985 0.003 247);
+  --border: oklch(0.89 0.008 95);
+  --input: oklch(0.92 0.008 95);
+  --ring: oklch(0.44 0.1 130);
+  --chart-1: oklch(0.5 0.11 130);
+  --chart-2: oklch(0.72 0.15 65);
+  --chart-3: oklch(0.55 0.04 240);
+  --chart-4: oklch(0.78 0.13 95);
+  --chart-5: oklch(0.6 0.18 27);
+  --sidebar: oklch(0.985 0.004 95);
+  --sidebar-foreground: oklch(0.25 0.015 240);
+  --sidebar-primary: oklch(0.44 0.1 130);
+  --sidebar-primary-foreground: oklch(0.985 0.008 110);
+  --sidebar-accent: oklch(0.95 0.01 95);
+  --sidebar-accent-foreground: oklch(0.28 0.02 240);
+  --sidebar-border: oklch(0.89 0.008 95);
+  --sidebar-ring: oklch(0.44 0.1 130);
   --risk-low: oklch(0.7 0.15 145);
   --risk-medium: oklch(0.82 0.16 95);
   --risk-high: oklch(0.72 0.18 55);
   --risk-urgent: oklch(0.6 0.22 27);
-  /* Glassmorphism surface for cards over the agri background */
-  --agri-glass: oklch(1 0 0 / 0.65);
-  --agri-glass-border: oklch(1 0 0 / 0.5);
-  --agri-surface: oklch(0.96 0.005 95 / 0.7);
 }
 
 .dark {
-  --background: oklch(0.16 0.015 240);
-  --foreground: oklch(0.96 0.01 95);
-  --card: oklch(0.22 0.015 240 / 0.65);
-  --card-foreground: oklch(0.96 0.01 95);
-  --popover: oklch(0.22 0.015 240 / 0.75);
-  --popover-foreground: oklch(0.96 0.01 95);
-  --primary: oklch(0.6 0.13 130);
-  --primary-foreground: oklch(0.16 0.015 240);
-  --secondary: oklch(0.25 0.015 240);
-  --secondary-foreground: oklch(0.96 0.01 95);
-  --muted: oklch(0.25 0.015 240);
-  --muted-foreground: oklch(0.7 0.015 240);
-  --accent: oklch(0.72 0.16 65);
-  --accent-foreground: oklch(0.18 0.04 50);
+  --background: oklch(0.165 0.012 240);
+  --foreground: oklch(0.965 0.008 95);
+  --card: oklch(0.2 0.012 240);
+  --card-foreground: oklch(0.965 0.008 95);
+  --popover: oklch(0.2 0.012 240);
+  --popover-foreground: oklch(0.965 0.008 95);
+  --primary: oklch(0.6 0.12 130);
+  --primary-foreground: oklch(0.16 0.012 240);
+  --secondary: oklch(0.25 0.012 240);
+  --secondary-foreground: oklch(0.965 0.008 95);
+  --muted: oklch(0.25 0.012 240);
+  --muted-foreground: oklch(0.7 0.012 240);
+  --accent: oklch(0.72 0.15 65);
+  --accent-foreground: oklch(0.17 0.04 50);
   --destructive: oklch(0.6 0.22 27);
-  --destructive-foreground: oklch(0.98 0.003 247);
+  --destructive-foreground: oklch(0.985 0.003 247);
   --border: oklch(1 0 0 / 12%);
   --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.6 0.13 130);
-  --chart-1: oklch(0.6 0.13 130);
-  --chart-2: oklch(0.75 0.16 65);
+  --ring: oklch(0.6 0.12 130);
+  --chart-1: oklch(0.6 0.12 130);
+  --chart-2: oklch(0.75 0.15 65);
   --chart-3: oklch(0.65 0.04 240);
   --chart-4: oklch(0.78 0.13 95);
   --chart-5: oklch(0.65 0.2 27);
-  --sidebar: oklch(0.16 0.015 240);
-  --sidebar-foreground: oklch(0.96 0.01 95);
-  --sidebar-primary: oklch(0.6 0.13 130);
-  --sidebar-primary-foreground: oklch(0.16 0.015 240);
-  --sidebar-accent: oklch(0.25 0.015 240);
-  --sidebar-accent-foreground: oklch(0.96 0.01 95);
+  --sidebar: oklch(0.165 0.012 240);
+  --sidebar-foreground: oklch(0.965 0.008 95);
+  --sidebar-primary: oklch(0.6 0.12 130);
+  --sidebar-primary-foreground: oklch(0.16 0.012 240);
+  --sidebar-accent: oklch(0.25 0.012 240);
+  --sidebar-accent-foreground: oklch(0.965 0.008 95);
   --sidebar-border: oklch(1 0 0 / 12%);
-  --sidebar-ring: oklch(0.6 0.13 130);
+  --sidebar-ring: oklch(0.6 0.12 130);
   --risk-low: oklch(0.65 0.15 145);
   --risk-medium: oklch(0.75 0.16 95);
   --risk-high: oklch(0.7 0.18 55);
   --risk-urgent: oklch(0.62 0.22 27);
-  --agri-glass: oklch(0.22 0.015 240 / 0.55);
-  --agri-glass-border: oklch(1 0 0 / 0.12);
-  --agri-surface: oklch(0.2 0.015 240 / 0.6);
 }
 
 @layer base {
@@ -170,83 +160,25 @@
     background-color: var(--color-background);
     color: var(--color-foreground);
     font-family: var(--font-sans);
-    /* Subtle agri background image with a readable overlay. Falls back to the
-       solid color if the image fails to load. */
-    background-image:
-      linear-gradient(
-        180deg,
-        color-mix(in oklab, var(--background) 70%, transparent),
-        color-mix(in oklab, var(--background) 92%, transparent)
-      ),
-      url("/agri-bg.jpg");
-    background-size: cover;
-    background-position: center;
-    background-attachment: fixed;
-    background-repeat: no-repeat;
-  }
-
-  .dark body {
-    background-image:
-      linear-gradient(
-        180deg,
-        color-mix(in oklab, var(--background) 55%, black),
-        color-mix(in oklab, var(--background) 80%, black)
-      ),
-      url("/agri-bg.jpg");
   }
 }
 
 @layer utilities {
-  /* Glassmorphism card: translucent, blurred, subtle border */
-  .glass {
-    background: var(--color-agri-glass);
-    border: 1px solid var(--color-agri-glass-border);
-    backdrop-filter: blur(16px) saturate(1.15);
-    -webkit-backdrop-filter: blur(16px) saturate(1.15);
-    box-shadow: 0 8px 32px rgb(0 0 0 / 0.08);
-  }
-
-  .glass-strong {
-    background: var(--color-agri-surface);
-    border: 1px solid var(--color-agri-glass-border);
-    backdrop-filter: blur(24px) saturate(1.2);
-    -webkit-backdrop-filter: blur(24px) saturate(1.2);
-    box-shadow: 0 12px 40px rgb(0 0 0 / 0.1);
-  }
-
-  /* Glossy highlight overlay for buttons / cards */
-  .glossy::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    border-radius: inherit;
-    background: linear-gradient(
-      135deg,
-      color-mix(in oklab, white 65%, transparent) 0%,
-      color-mix(in oklab, white 0%, transparent) 40%,
-      color-mix(in oklab, white 0%, transparent) 100%
-    );
-    pointer-events: none;
-    border: 1px solid color-mix(in oklab, white 40%, transparent);
-  }
-
   .text-balance {
     text-wrap: balance;
   }
 
-  .glass-transparent {
-    background: transparent;
-    backdrop-filter: none;
-    -webkit-backdrop-filter: none;
+  .font-body {
+    font-family: var(--font-inter);
+  }
+
+  .font-display {
+    font-family: var(--font-outfit);
   }
 }
 
 /*
  * Estate map overlays.
- *
- * The block labels are DOM markers placed by MapLibre. They reference the
- * theme's CSS variables directly so they follow the light/dark palette
- * without the map having to re-render.
  */
 .estate-map-label {
   display: inline-flex;
@@ -255,23 +187,20 @@
   padding: 0.25rem 0.5rem;
   border-radius: 9999px;
   border: 1px solid var(--color-border);
-  background: color-mix(in oklab, var(--color-card) 88%, transparent);
+  background: var(--color-card);
   color: var(--color-foreground);
   font-size: 11px;
   font-weight: 600;
   line-height: 1;
   white-space: nowrap;
   cursor: pointer;
-  box-shadow: 0 1px 2px rgb(0 0 0 / 0.12);
-  backdrop-filter: blur(4px);
-  transition:
-    transform 120ms ease,
-    box-shadow 120ms ease;
+  box-shadow: 0 1px 2px rgb(0 0 0 / 0.08);
+  transition: transform 120ms ease, box-shadow 120ms ease;
 }
 
 .estate-map-label:hover {
   transform: translateY(-1px);
-  box-shadow: 0 3px 8px rgb(0 0 0 / 0.18);
+  box-shadow: 0 3px 8px rgb(0 0 0 / 0.12);
 }
 
 .estate-map-label:focus-visible {
@@ -314,7 +243,7 @@
 }
 
 .maplibregl-ctrl-attrib {
-  background: color-mix(in oklab, var(--color-card) 85%, transparent);
+  background: var(--color-card);
   color: var(--color-muted-foreground);
   font-size: 10px;
 }
